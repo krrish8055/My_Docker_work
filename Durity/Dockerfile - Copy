@@ -1,0 +1,23 @@
+# from base image nginx
+FROM nginx:latest
+
+WORKDIR /durityapi/Angular
+
+# copying all the files from your file system to container file system
+COPY . .
+
+# Building artifacts and copying it to public folder and copying nginx.conf file as well to container
+COPY nginx.conf /etc/nginx/nginx.conf
+RUN rm -r usr/share/nginx/html/index.html
+RUN rm -r usr/share/nginx/html/50x.html
+RUN npm i
+RUN npm i @angular-devkit/core
+RUN npm audit fix
+RUN nodejs node_modules/node-sass/scripts/install.js
+RUN npm rebuild node-sass
+RUN ng build --sourcemap=false
+RUN cp -r ./dist* usr/share/nginx/html
+
+#expose the port
+EXPOSE 80
+

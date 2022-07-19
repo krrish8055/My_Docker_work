@@ -1,0 +1,23 @@
+> Configure project :app
+WARNING: Configuration 'compile' is obsolete and has been replaced with 'implementation' and 'api'.
+It will be removed in version 5.0 of the Android Gradle plugin.
+For more information, see http://d.android.com/r/tools/update-dependency-configurations.html.
+
+> Task :app:processDebugManifest FAILED
+/ionic/platforms/android/app/src/main/AndroidManifest.xml Error:
+        uses-sdk:minSdkVersion 19 cannot be smaller than version 22 declared in library [:CordovaLib] /ionic/platforms/android/CordovaLib/build/intermediates/library_manifest/debug/AndroidManifest.xml as the library might be using APIs not available in 19
+        Suggestion: use a compatible library with a minSdk of at most 19,
+                or increase this project's minSdk version to at least 22,
+                or use tools:overrideLibrary="org.apache.cordova" to force usage (may lead to runtime failures)
+
+See http://g.co/androidstudio/manifest-merger for more information about the manifest merger.
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:processDebugManifest'.
+> Manifest merger failed : uses-sdk:minSdkVersion 19 cannot be smaller than version 22 declared in library [:CordovaLib] /ionic/platforms/android/CordovaLib/build/intermediates/library_manifest/debug/AndroidManifest.xml as the library might be using APIs not available in 19
+        Suggestion: use a compatible library with a minSdk of at most 19,
+                or increase this project's minSdk version to at least 22,
+                or use tools:overrideLibrary="org.apache.cordova" to force usage (may lead to runtime failures)

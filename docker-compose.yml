@@ -1,0 +1,19 @@
+version: '3'
+services:
+   angulatfrontend:
+     image: krishnadeepak/firstimage:AngularNginx
+     container_name: angularnginx
+     ports:
+       - "4200:80"
+     restart: always
+     volumes:
+      - /var/lib/docker/volumes/nginxhome/_data:/data/angular
+   nodebackend:
+     image: krishnadeepak/firstimage:Nodeapi
+     container_name: nodebackend
+     ports:
+       - "8080:8080"
+       - "9090:9090"
+     volumes:
+      - /var/lib/docker/volumes/nodehome/_data:/data/node
+     restart: always

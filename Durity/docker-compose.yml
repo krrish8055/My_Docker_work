@@ -1,0 +1,42 @@
+version: '3'
+services:
+   node:
+     container_name: node
+     pull: true
+     build: .
+     ports:
+       - "8888:8888"
+     volumes:
+       - /var/lib/docker/volumes/nodehome/_data:/home/node/app
+     restart: always
+     links:
+       - mongo
+
+   mongo:
+     image: mongo:3.6.3
+     container_name: mongo
+     pull: true
+     environment:
+       MONGO_INITDB_ROOT_USERNAME: mongoadmin
+       MONGO_INITDB_ROOT_PASSWORD: admin@100
+       MONGO_INITDB_DATABASE: prod
+       MONGO_INITDB_USER: mongoaccess
+       MONGO_INITDB_PASS: 8Xz9*!\D8055
+     ports:
+       - "27017:27017"
+     volumes:
+       - /var/lib/docker/volumes/mongohome/_data:/data/db
+     restart: always
+
+   nginx:
+     container_name: nginx
+     pull: true
+     build: ./Nginx
+     ports:
+       - "80:80"
+     volumes:
+       - /var/lib/docker/volumes/nginxhome/_data:/home/nginx/app
+     restart: always
+     links:
+       - node
+       - mongo

@@ -1,0 +1,26 @@
+# To create the Image with all the required development packages and run the container with the volume use this command:
+docker-compose up -d
+
+# To terminate and clean all the Docker related resources including images, containers, volumes use this command:
+docker-compose down --rm all
+
+# To Tag the image and push to docker hub use this command.
+docker tag (imageid) (repository-name):tag-name
+
+Ex: docker push febatech/febatech:ionic
+
+Note: as a prerequisite for pushing the image you should login to docker hub using docker-hub credentials using the command "docker login"
+
+# after pushing if you want to pull the same image in to the another system you can use this command:
+docker pull (image-name)
+# or you can specify the image name in the docker-compose.yaml file and run "docker-compose up -d"
+
+# for logging in to the container use this command:
+docker exec -it (container-id or container name) /bin/bash
+Ex: docker exec -it ionic /bin/bash
+
+# for checking the running containers status.
+docker ps
+
+# for checking stopped containers status.
+docker ps -a

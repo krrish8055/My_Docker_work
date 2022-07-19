@@ -1,0 +1,15 @@
+version: '3'
+services:
+   ionic:
+     container_name: ionic
+     #image:
+     build: .
+     ports:
+       - "8100:8100"
+       - "4200:4200"
+     volumes:
+       - /var/lib/docker/volumes/ionichome/_data:/home/ionic/app
+     restart: always
+     
+     
+

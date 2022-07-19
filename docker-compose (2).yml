@@ -1,0 +1,17 @@
+version: '3'
+services:
+   mongodb:
+     image: krishnadeepak/durity-docker-images-architecture:mongodb3.6.3
+     container_name: duritymongo
+     environment:
+       MONGO_INITDB_ROOT_USERNAME: mongoadmin
+       MONGO_INITDB_ROOT_PASSWORD: admin@8055
+       MONGO_INITDB_DATABASE: prod
+       MONGO_INITDB_USER: mongoaccess
+       MONGO_INITDB_PASS: 8Xz9*!\D8055
+     ports:
+       - "27017:27017"
+     volumes:
+       - /var/lib/docker/volumes/mongohome/_data:/data/db
+     restart: always
+     network_mode: bridge

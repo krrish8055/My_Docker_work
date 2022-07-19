@@ -1,0 +1,76 @@
+FROM node:14.15.4
+
+#ENVIRONNEMENT
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
+ENV GRADLE_HOME /usr/local/gradle
+ENV GRADLE_VERSION 4.10.3
+
+ENV ANDROID_VERSION=29
+ENV ANDROID_HOME /usr/local/android-sdk-linux
+ENV ANDROID_SDK_ROOT /usr/local/android-sdk-linux
+ENV ANDROID_TOOLS_VERSION 29.0.6
+ENV ANDROID_API_LEVELS android-29
+ENV ANDROID_BUILD_TOOLS_VERSION 29.0.2
+ENV IONIC_VERSION 5.4.15
+
+ENV PATH ${GRADLE_HOME}/bin:${JAVA_HOME}/bin:${ANDROID_HOME}/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+
+#INSTALL JAVA
+RUN apt update -y && \
+  apt install openjdk-8-jdk -y
+
+# INSTALL IONIC AND CORDOVA
+RUN npm install -g cordova ionic@${IONIC_VERSION}
+
+#INSTALL Graddle
+RUN mkdir -p ${GRADLE_HOME} && \
+  curl -L https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip > /tmp/gradle.zip && \
+  unzip /tmp/gradle.zip -d ${GRADLE_HOME} && \
+  mv ${GRADLE_HOME}/gradle-${GRADLE_VERSION}/* ${GRADLE_HOME} && \
+  rm -r ${GRADLE_HOME}/gradle-${GRADLE_VERSION}/
+
+# INSTALL ANDROID
+RUN apt install android-sdk -y
+RUN mkdir -p ${ANDROID_HOME} && \
+  curl -L https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > /tmp/tools.zip && \
+  unzip /tmp/tools.zip -d ${ANDROID_HOME} && \
+RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses --sdk_root=${ANDROID_HOME}
+
+# CONFIGURATION
+RUN $ANDROID_HOME/tools/bin/sdkmanager --update
+RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
+    "platforms;android-${ANDROID_VERSION}" \
+    "platform-tools" --sdk_root=${ANDROID_HOME}
+
+#FILES DELETION
+RUN rm -rf /tmp/* /var/cache/apk/*
+
+#CREATING REQUIRED CONTAINER PACKAGES
+RUN apt-get update -y
+RUN apt-get install nano -y
+RUN apt-get install vim -y
+
+# CREATING WORKING DIRECTORY
+WORKDIR /ionic
+
+# copying all the files from your file system to container file system
+COPY . .
+
+# install all dependencies
+RUN npm install
+RUN npm i rxjs --save
+RUN npm install cordova-res
+RUN rm -rf node_modules/@ionic-native/media-capture/ngx/index.d.ts
+RUN cp -r /ionic/index.d.ts node_modules/@ionic-native/media-capture/ngx
+RUN npm i -g @angular/cli@8.3.23
+RUN npm i ash
+RUN ionic cordova platform rm android
+RUN ionic codova platform prepare android
+
+#expose the port
+EXPOSE 8100 4200
+
+#ENTRYPOINT ["ionic"]
+CMD ["ng","serve"]
